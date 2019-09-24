@@ -23,7 +23,7 @@ class Todo extends React.Component {
 
   handleChange = (e) => {
     this.setState( {item:e.target.value} );
-  }
+  };
 
   toggle = (e,id) => {
     e.preventDefault();
@@ -58,6 +58,6 @@ class Todo extends React.Component {
       </section>
     );
   }
-};
+}
 
 export default Todo;
