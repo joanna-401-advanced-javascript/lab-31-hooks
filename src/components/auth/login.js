@@ -1,5 +1,5 @@
 import superagent from 'superagent';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { LoginContext } from './context.js';
 
 const API = process.env.REACT_APP_API;
@@ -11,6 +11,7 @@ const If = props => {
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const loginContext = useContext(LoginContext);
 
   function handleUsernameChange(e) {
     setUsername(e.target.value);
@@ -33,36 +34,30 @@ export default function Login() {
   }
 
   return (
-    <LoginContext.Consumer>
-      {context => {
-        return (
-          <>
-            <If condition={context.loggedIn}>
-              <button onClick={context.logout}>
-                Log Out
-              </button>
-            </If>
-            <If condition={!context.loggedIn}>
-              <div>
-                <form onSubmit={e => handleSubmit(e, context.login)}>
-                  <input
-                    placeholder="username"
-                    name="username"
-                    onChange={handleUsernameChange}
-                  />
-                  <input
-                    placeholder="password"
-                    name="password"
-                    type="password"
-                    onChange={handlePasswordChange}
-                  />
-                  <input type="submit" value="login" />
-                </form>
-              </div>
-            </If>
-          </>
-        );
-      }}
-    </LoginContext.Consumer>
+    <>
+      <If condition={loginContext.loggedIn}>
+        <button onClick={loginContext.logout}>
+          Log Out
+        </button>
+      </If>
+      <If condition={!loginContext.loggedIn}>
+        <div>
+          <form onSubmit={e => handleSubmit(e, loginContext.login)}>
+            <input
+              placeholder="username"
+              name="username"
+              onChange={handleUsernameChange}
+            />
+            <input
+              placeholder="password"
+              name="password"
+              type="password"
+              onChange={handlePasswordChange}
+            />
+            <input type="submit" value="login" />
+          </form>
+        </div>
+      </If>
+    </>
     );
 }
