@@ -1,11 +1,11 @@
 import superagent from 'superagent';
 import React, { useState, useContext } from 'react';
-import { LoginContext } from './context.js';
+import { LoginContext } from './context';
 
 const API = process.env.REACT_APP_API;
 
-const If = props => {
-  return !!props.condition ? props.children : null;
+const If = (props) => {
+  return props.condition ? props.children : null;
 };
 
 export default function Login() {
@@ -24,13 +24,13 @@ export default function Login() {
   function handleSubmit(e, loginMethodFromContext) {
     e.preventDefault();
     superagent
-    .post(`${API}/signin`)
-    .auth(username, password)
-    .then(response => {
-      let token = response.text;
-      loginMethodFromContext(token);
-    })
-    .catch(console.error);
+      .post(`${API}/signin`)
+      .auth(username, password)
+      .then((response) => {
+        const token = response.text;
+        loginMethodFromContext(token);
+      })
+      .catch('error');
   }
 
   return (
@@ -42,7 +42,7 @@ export default function Login() {
       </If>
       <If condition={!loginContext.loggedIn}>
         <div>
-          <form onSubmit={e => handleSubmit(e, loginContext.login)}>
+          <form onSubmit={(e) => handleSubmit(e, loginContext.login)}>
             <input
               placeholder="username"
               name="username"
@@ -59,5 +59,5 @@ export default function Login() {
         </div>
       </If>
     </>
-    );
+  );
 }

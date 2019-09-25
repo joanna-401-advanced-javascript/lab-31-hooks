@@ -1,25 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { LoginContext } from './context.js';
-import login from "./login";
+import { LoginContext } from './context';
+// import login from './login';
 
-const If = props => {
+const If = (props) => {
   return props.condition ? props.children : null;
 };
 
-console.log('auth loaded');
-
 export default function Auth(props) {
-  console.log("AUTH RENDER");
-
   return (
     <LoginContext.Consumer>
-      {context => {
-        console.log(context);
-        let okToRender =
-          context.loggedIn &&
-          (props.capability
+      {(context) => {
+        const okToRender = context.loggedIn
+          && (props.capability
             ? context.user.capabilities && context.user.capabilities.includes(props.capability)
             : true);
 
@@ -27,5 +21,12 @@ export default function Auth(props) {
       }}
     </LoginContext.Consumer>
   );
-
 }
+
+Auth.propTypes = {
+  capability: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
+  ]),
+};
