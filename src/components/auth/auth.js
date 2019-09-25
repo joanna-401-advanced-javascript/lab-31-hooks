@@ -1,36 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { LoginContext } from './context.js';
+import { LoginContext } from './context';
+// import login from './login';
 
-const If = props => {
+const If = (props) => {
   return props.condition ? props.children : null;
 };
 
-console.log('auth loaded');
+export default function Auth(props) {
+  return (
+    <LoginContext.Consumer>
+      {(context) => {
+        const okToRender = context.loggedIn
+          && (props.capability
+            ? context.user.capabilities && context.user.capabilities.includes(props.capability)
+            : true);
 
-class Auth extends React.Component {
-  render() {
-    console.log("AUTH RENDER");
-    return (
-      <LoginContext.Consumer>
-        {context => {
-          console.log(context);
-          let okToRender =
-            context.loggedIn &&
-            (this.props.capability
-              ? context.user.capabilities && context.user.capabilities.includes(this.props.capability)
-              : true);
-
-          return <If condition={okToRender}>{this.props.children}</If>;
-        }}
-      </LoginContext.Consumer>
-    );
-  }
+        return <If condition={okToRender}>{props.children}</If>;
+      }}
+    </LoginContext.Consumer>
+  );
 }
 
 Auth.propTypes = {
-  capability: PropTypes.string.isRequired,
+  capability: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
+  ]),
 };
-
-export default Auth;
